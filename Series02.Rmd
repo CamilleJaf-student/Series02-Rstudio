@@ -136,7 +136,6 @@ cat("Regression equation : PANU =", slope, "*SANU +", intercept, "\n")
 Summarize your results as you would do in your master’s thesis report, or as in a scientific article (e.g., What sentence will you write in the article explaining your result?).
 
 
-
 What are the limits of your analysis?
 
 
@@ -144,21 +143,68 @@ What are the limits of your analysis?
 # Statistical tests: comparison of medians (or means?)
 In this series of exercises, you will explore how to compare two groups of data, using non-parametric tests (or parametric tests… if it makes sense to do so).
 
+
+
 ## Make clear what is a statistical test, and when to use it.
 Below are some questions to guide your analysis. You can answer them in your notebook, with a short sentence for each question.
 
         - What is a median? A mean?
-        -What is a variance? A standard deviation?
-        -What is a normal distribution?
-        -What is a statistical test?
-        -When to use a statistical test?
-        -What is a parametric test? A non-parametric test?
-        -What are the assumptions of parametric tests?
-        -What are the assumptions of non-parametric tests?
-        -What is a p-value?
-        -What is the risk of error when using a statistical test?
-        -What is the difference between a paired and an unpaired test?
+
+Median: the middle value of a dataset when the values are ordered.
+Mean: the sum of all values divided by the number of values.
+
+        - What is a variance? A standard deviation?
+
+Variance: the average of the squared differences from the mean.
+Standard deviation (SD): the square root of the variance, expressing variability in the same units as the data.
+
+        - What is a normal distribution?
+
+(Gaussian distribution) is a symmetric, bell-shaped probability distribution defined by its mean (µ) and standard deviation (σ).
+
+        - What is a statistical test?
+
+A statistical test is a formal procedure that uses data to evaluate a hypothesis, typically by comparing an observed statistic to a theoretical distribution under the null hypothesis.
+
+        - When to use a statistical test?
         
+When you want to make inferences from a sample to a population, compare groups, or test relationships, instead of just describing the data.
+
+        - What is a parametric test? A non-parametric test?
+
+Parametric tests assume that data follow a certain distribution (usually normal) and use parameters like mean and variance (e.g., t-test, ANOVA).
+Non-parametric tests make fewer assumptions; they use ranks or medians (e.g., Wilcoxon, Kruskal-Wallis).
+
+        - What are the assumptions of parametric tests?
+
+Normal distribution of data (or residuals).
+Homogeneity of variances between groups.
+Independence of observations.
+
+        - What are the assumptions of non-parametric tests?
+
+Independence of observations.
+Ordinal or continuous data (not nominal).
+Monotonic relationship for correlation-type tests.
+
+        - What is a p-value?
+
+The p-value is the probability of obtaining results at least as extreme as those observed, assuming the null hypothesis is true.
+
+        - What is the risk of error when using a statistical test?
+
+Type I error (α): rejecting H0 when it is true (false positive).
+Type II error (β): failing to reject H0 when it is false (false negative).
+
+        - What is the difference between a paired and an unpaired test?
+
+Paired test: used when observations are linked (e.g., before–after on the same subjects).
+Unpaired test: used when observations are independent (e.g., two different groups).
+
+Sources : Livres :
+Réussite à la LCA en français anglais
+Maitriser la LCA en anglais
+
 You can use your favorite LLM, book or web site to answer these questions, but you have to provide at least one reference for each answer (book, article, URL, LLM prompt, etc.).
 
 ## Effect of treatment over time
