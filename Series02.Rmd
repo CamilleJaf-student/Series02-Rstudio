@@ -201,7 +201,8 @@ Type II error (β): failing to reject H0 when it is false (false negative).
 Paired test: used when observations are linked (e.g., before–after on the same subjects).
 Unpaired test: used when observations are independent (e.g., two different groups).
 
-Sources : Livres :
+Sources : 
+Livres :
 Réussite à la LCA en français anglais
 Maitriser la LCA en anglais
 
