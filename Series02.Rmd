@@ -91,13 +91,55 @@ cor.test(nonuse_clean$SANU, nonuse_clean$EENU, method = "spearman")
 
 Visualize the PANU-SANU relationship (and the PANU-EENU relationship)
 
+``` {r plot_sanu}
+library(ggplot2)
+ggplot(nonuse, aes(x=PANU, y=SANU)) +
+  geom_point() +
+  xlim(-100, 100) +
+  ylim(-100, 100)
+  labs(title="PANU vs SANU", x="PANU", y="SANU") +
+  theme_minimal()
+```
+
 Perform a linear regression for PANU-SANU (and for PANU-EENU)
+
+``` {r plot_sanu-regression}
+library(ggplot2)
+ggplot(nonuse, aes(x=PANU, y=SANU)) +
+  geom_point() +
+  geom_smooth(method='lm', formula= y~x, color='salmon', se=T) +
+  xlim(-100, 100) +
+  ylim(-100, 100)
+  labs(title="PANU vs SANU", x="PANU", y="SANU") +
+  theme_minimal()
+```
 
 Give the regression equations: PANU = a * SANU + b and PANU = a * EENU + b
 
+``` {r lm-sanu}
+lm_sanu <- lm(SANU ~ PANU, data=nonuse)
+summary(lm_sanu)
+coef(lm_sanu)
+slope <- coef(lm_sanu)[1]
+intercept <- coef(lm_sanu)[2]
+cat("Regression equation : SANU =", slope, "*PANU +", intercept, "\n")
+```
+``` {r lm-panu_to_sanu}
+lm_panu <- lm(PANU ~ SANU, data=nonuse)
+summary(lm_panu)
+coef(lm_panu)
+slope <- coef(lm_panu)[1]
+intercept <- coef(lm_panu)[2]
+cat("Regression equation : PANU =", slope, "*SANU +", intercept, "\n")
+```
+
 Summarize your results as you would do in your master’s thesis report, or as in a scientific article (e.g., What sentence will you write in the article explaining your result?).
 
+
+
 What are the limits of your analysis?
+
+
 
 # Statistical tests: comparison of medians (or means?)
 In this series of exercises, you will explore how to compare two groups of data, using non-parametric tests (or parametric tests… if it makes sense to do so).
