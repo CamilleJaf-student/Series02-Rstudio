@@ -48,6 +48,47 @@ Below are some questions to guide your analysis.
 
 Is PANU correlated with SANU and/or EENU?
 
+```` {r histogram_PANU}
+hist(nonuse$PANU, 
+     main = "PANU Distribution", 
+     xlab = "PANU", 
+     col = "lightgreen", 
+     border = "black", 
+     breaks = 20,       # number of bins
+     probability = TRUE) # scales y-axis as density
+
+# Add density curve
+lines(density(nonuse$PANU, na.rm = TRUE), 
+      col = "red", lwd = 2)
+````
+````{r correlation_sanu_spearman}
+cor.test(nonuse$PANU, nonuse$SANU, method = "spearman")
+````
+
+
+```{r correlation-sanu}
+cor.test(nonuse$PANU, nonuse$SANU, method = "pearson")
+
+# --- 1. Nettoyage des données ---
+nonuse_clean <- na.omit(nonuse)
+
+# --- 2. Vérification normalité ---
+shapiro.test(nonuse_clean$PANU)
+shapiro.test(nonuse_clean$EENU)
+shapiro.test(nonuse_clean$SANU)
+
+# --- 3. Matrice de corrélation ---
+# (choisis "pearson" si normalité, sinon "spearman")
+cor_matrix <- cor(nonuse_clean, method = "spearman")
+print(cor_matrix)
+
+# --- 4. Tests de corrélation individuels ---
+cor.test(nonuse_clean$PANU, nonuse_clean$SANU, method = "spearman")
+cor.test(nonuse_clean$PANU, nonuse_clean$EENU, method = "spearman")
+cor.test(nonuse_clean$SANU, nonuse_clean$EENU, method = "spearman")
+```
+
+
 Visualize the PANU-SANU relationship (and the PANU-EENU relationship)
 
 Perform a linear regression for PANU-SANU (and for PANU-EENU)
