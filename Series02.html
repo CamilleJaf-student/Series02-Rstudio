@@ -1710,7 +1710,7 @@ display: none;
 
 <h1 class="title toc-ignore"><p>Series02-Rstudio :</p></h1>
 <h4 class="author">Camille JAFFEUX</h4>
-<h4 class="date">07 October, 2025, 13:40</h4>
+<h4 class="date">07 October, 2025, 15:49</h4>
 
 </div>
 
@@ -1870,6 +1870,34 @@ summary(lm_sanu)</code></pre>
 intercept &lt;- coef(lm_sanu)[2]
 cat(&quot;Regression equation : SANU =&quot;, slope, &quot;*PANU +&quot;, intercept, &quot;\n&quot;)</code></pre>
 <pre><code>## Regression equation : SANU = 0.5860521 *PANU + 0.08932839</code></pre>
+<pre class="r"><code>lm_eenu &lt;- lm(EENU ~ PANU, data=nonuse)
+summary(lm_eenu)</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = EENU ~ PANU, data = nonuse)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -44.622  -7.418  -1.214   6.620  36.023 
+## 
+## Coefficients:
+##             Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)  3.28370    1.04746   3.135  0.00197 ** 
+## PANU         0.56462    0.07283   7.752    4e-13 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 11.8 on 207 degrees of freedom
+##   (223 observations deleted due to missingness)
+## Multiple R-squared:  0.225,  Adjusted R-squared:  0.2213 
+## F-statistic:  60.1 on 1 and 207 DF,  p-value: 4.005e-13</code></pre>
+<pre class="r"><code>coef(lm_eenu)</code></pre>
+<pre><code>## (Intercept)        PANU 
+##   3.2836967   0.5646221</code></pre>
+<pre class="r"><code>slope &lt;- coef(lm_eenu)[1]
+intercept &lt;- coef(lm_eenu)[2]
+cat(&quot;Regression equation : EENU =&quot;, slope, &quot;*PANU +&quot;, intercept, &quot;\n&quot;)</code></pre>
+<pre><code>## Regression equation : EENU = 3.283697 *PANU + 0.5646221</code></pre>
 <pre class="r"><code>lm_panu &lt;- lm(PANU ~ SANU, data=nonuse)
 summary(lm_panu)</code></pre>
 <pre><code>## 
@@ -1898,10 +1926,66 @@ summary(lm_panu)</code></pre>
 intercept &lt;- coef(lm_panu)[2]
 cat(&quot;Regression equation : PANU =&quot;, slope, &quot;*SANU +&quot;, intercept, &quot;\n&quot;)</code></pre>
 <pre><code>## Regression equation : PANU = 8.868194 *SANU + 0.100933</code></pre>
+<pre class="r"><code>lm_panu &lt;- lm(PANU ~ EENU, data=nonuse)
+summary(lm_panu)</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = PANU ~ EENU, data = nonuse)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -16.487  -6.555  -2.321   3.249  36.230 
+## 
+## Coefficients:
+##             Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)  5.67295    0.80975   7.006 3.39e-11 ***
+## EENU         0.39851    0.05141   7.752 4.00e-13 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 9.917 on 207 degrees of freedom
+##   (223 observations deleted due to missingness)
+## Multiple R-squared:  0.225,  Adjusted R-squared:  0.2213 
+## F-statistic:  60.1 on 1 and 207 DF,  p-value: 4.005e-13</code></pre>
+<pre class="r"><code>coef(lm_panu)</code></pre>
+<pre><code>## (Intercept)        EENU 
+##   5.6729472   0.3985147</code></pre>
+<pre class="r"><code>slope &lt;- coef(lm_panu)[1]
+intercept &lt;- coef(lm_panu)[2]
+cat(&quot;Regression equation : PANU =&quot;, slope, &quot;*EENU +&quot;, intercept, &quot;\n&quot;)</code></pre>
+<pre><code>## Regression equation : PANU = 5.672947 *EENU + 0.3985147</code></pre>
 <p>Summarize your results as you would do in your master’s thesis
 report, or as in a scientific article (e.g., What sentence will you
 write in the article explaining your result?).</p>
+<p>A correlation and linear regression analysis were conducted to
+determine whether the proximal nonuse of the upper limb (PANU) was
+related to the nonuse of the shoulder (SANU) and the elbow (EENU).</p>
+<p>The Spearman’s rank correlation revealed a weak but significant
+positive association between PANU and SANU (ρ = 0.22, p = 0.0017),
+suggesting that greater proximal nonuse tends to be accompanied by
+higher shoulder nonuse.</p>
+<p>In contrast, a strong and significant positive linear relationship
+was observed between PANU and elbow extension nonuse (EENU) (R² = 0.225,
+p &lt; 0.001), indicating that greater proximal disuse is associated
+with greater distal disuse at the elbow level. Conversely, the linear
+association between PANU and SANU was not significant (R² = 0.009, p =
+0.17), although the weak monotonic correlation (ρ = 0.22) suggests a
+minor trend toward co-occurrence of proximal and shoulder nonuse.</p>
+<p>Overall, these findings indicate that proximal nonuse (PANU) is more
+strongly related to distal (elbow) nonuse than to shoulder nonuse,
+supporting the hypothesis that compensatory mechanisms may follow a
+proximal-to-distal gradient in motor disuse patterns.</p>
 <p>What are the limits of your analysis?</p>
+<ol style="list-style-type: decimal">
+<li><p>Missing data: A large number of missing observations were present
+(223 for SANU and EENU), reducing the statistical power and the
+representativeness of the sample.</p></li>
+<li><p>Linearity assumption: The linear model assumes a straight-line
+relationship between variables, which may not capture the complexity of
+upper limb motor behavior or compensatory strategies.</p></li>
+<li><p>Causality: The analysis is correlational; it does not allow
+inferring causality between proximal and distal nonuse.</p></li>
+</ol>
 </div>
 </div>
 <div id="statistical-tests-comparison-of-medians-or-means" class="section level1" number="2">
@@ -1987,12 +2071,60 @@ whether the effect is lasting or not.</p>
 <p>This file contains before/after measurements. The treatment is a
 rehabilitation training for individuals with cardiac conditions.</p>
 <p>Before going further, you have to make clear what are the measured
-variables. What do they measure? What are the units? What are the
-possible values? What are the expected changes over rehabilitation.</p>
+variables. What do they measure? The capacity to catch a What are the
+units? What are the possible values? What are the expected changes over
+rehabilitation.</p>
+<pre class="r"><code>prepost &lt;- read.csv(&quot;data/Prepost.csv&quot;, sep=&quot;,&quot;, header=TRUE)
+head(prepost)</code></pre>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["perf"],"name":[1],"type":["int"],"align":["right"]},{"label":["time"],"name":[2],"type":["chr"],"align":["left"]}],"data":[{"1":"125","2":"Before","_rn_":"1"},{"1":"130","2":"Before","_rn_":"2"},{"1":"132","2":"Before","_rn_":"3"},{"1":"135","2":"Before","_rn_":"4"},{"1":"136","2":"Before","_rn_":"5"},{"1":"138","2":"Before","_rn_":"6"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+<pre class="r"><code>summary(prepost)</code></pre>
+<pre><code>##       perf           time          
+##  Min.   :125.0   Length:16         
+##  1st Qu.:132.0   Class :character  
+##  Median :136.0   Mode  :character  
+##  Mean   :136.4                     
+##  3rd Qu.:140.2                     
+##  Max.   :148.0</code></pre>
 <p>Make a table, with one row per variable, and the following
 columns:</p>
-<div class="line-block">Variable | Description | Unit | Possible values
-| Expected change |</div>
+<table>
+<colgroup>
+<col width="15%" />
+<col width="20%" />
+<col width="7%" />
+<col width="28%" />
+<col width="28%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Variable</th>
+<th>Description</th>
+<th>Unit</th>
+<th>Possible values</th>
+<th>Expected change</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Performance</td>
+<td>Performance score or index to measure the subject capacity</td>
+<td>u.a</td>
+<td>Continuous positive values</td>
+<td>Increase expected after rehabilitation</td>
+</tr>
+<tr class="even">
+<td>Time</td>
+<td>Before vs After rehabilitation</td>
+<td>“Before” or “After”</td>
+<td>T01 or T02</td>
+<td>—</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div id="the-analysis" class="section level3" number="2.2.2">
 <h3><span class="header-section-number">2.2.2</span> The analysis</h3>
@@ -2011,6 +2143,18 @@ are probably true, some others are probably false (e.g., ref ).</p>
 <div id="the-data-2" class="section level3" number="2.2.3">
 <h3><span class="header-section-number">2.2.3</span> The data</h3>
 <p>Download the file snore.txt</p>
+<pre class="r"><code>snore &lt;- read.csv(&quot;data/snore.csv&quot;, sep=&quot;,&quot;, header=TRUE)
+head(snore)</code></pre>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["age.weight.height.alcool.sex.snore.tabac"],"name":[1],"type":["chr"],"align":["left"]}],"data":[{"1":"47\\t71\\t158\\t0\\tH\\tN\\tO","_rn_":"1"},{"1":"56\\t58\\t164\\t7\\tH\\tO\\tN","_rn_":"2"},{"1":"46\\t116\\t208\\t3\\tH\\tN\\tO","_rn_":"3"},{"1":"70\\t96\\t186\\t3\\tH\\tN\\tO","_rn_":"4"},{"1":"51\\t91\\t195\\t2\\tH\\tO\\tO","_rn_":"5"},{"1":"46\\t98\\t188\\t0\\tF\\tN\\tN","_rn_":"6"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+<pre class="r"><code>summary(snore)</code></pre>
+<pre><code>##  age.weight.height.alcool.sex.snore.tabac
+##  Length:100                              
+##  Class :character                        
+##  Mode  :character</code></pre>
 <p>This file contains anthropometric and qualitative measurements (1
 person per line).</p>
 </div>

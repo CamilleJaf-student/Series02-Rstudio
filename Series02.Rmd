@@ -236,24 +236,46 @@ Download the file PrePost.csv
 This file contains before/after measurements. 
 The treatment is a rehabilitation training for individuals with cardiac conditions.
 
-Before going further, you have to make clear what are the measured variables. What do they measure? What are the units? What are the possible values? What are the expected changes over rehabilitation.
+Before going further, you have to make clear what are the measured variables. 
+What do they measure? The capacity to catch a 
+What are the units? 
+What are the possible values? 
+What are the expected changes over rehabilitation.
+
+```{r load-Prepostdata}
+prepost <- read.csv("data/Prepost.csv", sep=",", header=TRUE)
+head(prepost)
+summary(prepost)
+```
 
 Make a table, with one row per variable, and the following columns:
 
 | Variable | Description | Unit | Possible values | Expected change |
+| -------- | ----------- | ---- | --------------- | --------------- |
+| Performance | Performance score or index to measure the subject capacity | u.a | Continuous positive values |Increase expected after rehabilitation |
+| Time | Before vs After rehabilitation | "Before" or "After" | T01 or T02 | --- |
+
 
 ### The analysis
 You want to know if the treatment has an effect on one or more of the measured variables.
 
-Does the treatment have an effect?
+- Does the treatment have an effect?
+H0 (null hypothesis): There is no difference between Before and After performance.
+H1 (alternative hypothesis): The After performance is higher than Before.
 
-What comparison are you going to make?
+- What comparison are you going to make?
+We need to compare the same patient Before and after rehab. 
 
-Which test will you use? Parametric or non-parametric?
+- Which test will you use? Parametric or non-parametric?
+We can use a parametric test if we have a normal distribution.
+For check this we can use a Shapiro test to validate the normal distribution of our population.
+If we have non normal distribution we need to use a non parametric test.
 
-Which graph illustrates the effect of the treatment?
+- Which graph illustrates the effect of the treatment?
+We can use a paired line plot.
 
 What sentence will you write in your thesis to explain your result?
+A Wilcoxon signed-rank test showed that performance significantly increased after rehabilitation (V = XX, p < 0.05), suggesting that the treatment produced a positive effect on physical performance.
 
 2.3 Testing some stereotypes
 Humans have stereotypes, some of them are probably true, some others are probably false (e.g., ref ).
@@ -263,11 +285,19 @@ Here, we will test stereotypes about snorers… among others.
 ### The data
 Download the file snore.txt
 
+```{r load-Resultdata}
+snore <- read.csv("data/snore.csv", sep=",", header=TRUE)
+head(snore)
+summary(snore)
+```
+
 This file contains anthropometric and qualitative measurements (1 person per line).
 
 ### The analysis
 Do the data confirm the following stereotypes? Provide a reasoned answer (data, figure, result sentence) for each question.
 Are snorers fatter?
+
+
 Do snorers drink or smoke more?
 Are men fatter?
 Do women smoke less?
