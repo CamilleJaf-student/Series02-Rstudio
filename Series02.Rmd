@@ -66,29 +66,6 @@ cor.test(nonuse$PANU, nonuse$SANU, method = "spearman")
 ````
 
 
-```{r correlation-sanu}
-cor.test(nonuse$PANU, nonuse$SANU, method = "pearson")
-
-# --- 1. Nettoyage des données ---
-nonuse_clean <- na.omit(nonuse)
-
-# --- 2. Vérification normalité ---
-shapiro.test(nonuse_clean$PANU)
-shapiro.test(nonuse_clean$EENU)
-shapiro.test(nonuse_clean$SANU)
-
-# --- 3. Matrice de corrélation ---
-# (choisis "pearson" si normalité, sinon "spearman")
-cor_matrix <- cor(nonuse_clean, method = "spearman")
-print(cor_matrix)
-
-# --- 4. Tests de corrélation individuels ---
-cor.test(nonuse_clean$PANU, nonuse_clean$SANU, method = "spearman")
-cor.test(nonuse_clean$PANU, nonuse_clean$EENU, method = "spearman")
-cor.test(nonuse_clean$SANU, nonuse_clean$EENU, method = "spearman")
-```
-
-
 Visualize the PANU-SANU relationship (and the PANU-EENU relationship)
 
 ``` {r plot_sanu}
@@ -124,6 +101,15 @@ slope <- coef(lm_sanu)[1]
 intercept <- coef(lm_sanu)[2]
 cat("Regression equation : SANU =", slope, "*PANU +", intercept, "\n")
 ```
+``` {r lm-eenu}
+lm_eenu <- lm(EENU ~ PANU, data=nonuse)
+summary(lm_eenu)
+coef(lm_eenu)
+slope <- coef(lm_eenu)[1]
+intercept <- coef(lm_eenu)[2]
+cat("Regression equation : EENU =", slope, "*PANU +", intercept, "\n")
+```
+
 ``` {r lm-panu_to_sanu}
 lm_panu <- lm(PANU ~ SANU, data=nonuse)
 summary(lm_panu)
@@ -132,11 +118,35 @@ slope <- coef(lm_panu)[1]
 intercept <- coef(lm_panu)[2]
 cat("Regression equation : PANU =", slope, "*SANU +", intercept, "\n")
 ```
+``` {r lm-panu_to_eenu}
+lm_panu <- lm(PANU ~ EENU, data=nonuse)
+summary(lm_panu)
+coef(lm_panu)
+slope <- coef(lm_panu)[1]
+intercept <- coef(lm_panu)[2]
+cat("Regression equation : PANU =", slope, "*EENU +", intercept, "\n")
+```
 
 Summarize your results as you would do in your master’s thesis report, or as in a scientific article (e.g., What sentence will you write in the article explaining your result?).
 
+A correlation and linear regression analysis were conducted to determine whether the proximal nonuse of the upper limb (PANU) was related to the nonuse of the shoulder (SANU) and the elbow (EENU).
+
+The Spearman’s rank correlation revealed a weak but significant positive association between PANU and SANU (ρ = 0.22, p = 0.0017), suggesting that greater proximal nonuse tends to be accompanied by higher shoulder nonuse.
+
+In contrast, a strong and significant positive linear relationship was observed between PANU and elbow extension nonuse (EENU) (R² = 0.225, p < 0.001), indicating that greater proximal disuse is associated with greater distal disuse at the elbow level. Conversely, the linear association between PANU and SANU was not significant (R² = 0.009, p = 0.17), although the weak monotonic correlation (ρ = 0.22) suggests a minor trend toward co-occurrence of proximal and shoulder nonuse.
+
+Overall, these findings indicate that proximal nonuse (PANU) is more strongly related to distal (elbow) nonuse than to shoulder nonuse, supporting the hypothesis that compensatory mechanisms may follow a proximal-to-distal gradient in motor disuse patterns.
 
 What are the limits of your analysis?
+
+1) Missing data:
+A large number of missing observations were present (223 for SANU and EENU), reducing the statistical power and the representativeness of the sample.
+
+2) Linearity assumption:
+The linear model assumes a straight-line relationship between variables, which may not capture the complexity of upper limb motor behavior or compensatory strategies.
+
+3) Causality:
+The analysis is correlational; it does not allow inferring causality between proximal and distal nonuse.
 
 
 # Statistical tests: comparison of medians (or means?)
@@ -223,7 +233,8 @@ To answer this question scientifically, measurements must be taken before and af
 ### The data
 Download the file PrePost.csv
 
-This file contains before/after measurements. The treatment is a rehabilitation training for individuals with cardiac conditions.
+This file contains before/after measurements. 
+The treatment is a rehabilitation training for individuals with cardiac conditions.
 
 Before going further, you have to make clear what are the measured variables. What do they measure? What are the units? What are the possible values? What are the expected changes over rehabilitation.
 

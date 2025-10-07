@@ -1710,7 +1710,7 @@ display: none;
 
 <h1 class="title toc-ignore"><p>Series02-Rstudio :</p></h1>
 <h4 class="author">Camille JAFFEUX</h4>
-<h4 class="date">25 September, 2025, 15:40</h4>
+<h4 class="date">07 October, 2025, 13:40</h4>
 
 </div>
 
@@ -1814,79 +1814,6 @@ lines(density(nonuse$PANU, na.rm = TRUE),
 ## sample estimates:
 ##       rho 
 ## 0.2160221</code></pre>
-<pre class="r"><code>cor.test(nonuse$PANU, nonuse$SANU, method = &quot;pearson&quot;)</code></pre>
-<pre><code>## 
-##  Pearson&#39;s product-moment correlation
-## 
-## data:  nonuse$PANU and nonuse$SANU
-## t = 1.3723, df = 207, p-value = 0.1714
-## alternative hypothesis: true correlation is not equal to 0
-## 95 percent confidence interval:
-##  -0.04129318  0.22773346
-## sample estimates:
-##        cor 
-## 0.09495356</code></pre>
-<pre class="r"><code># --- 1. Nettoyage des données ---
-nonuse_clean &lt;- na.omit(nonuse)
-
-# --- 2. Vérification normalité ---
-shapiro.test(nonuse_clean$PANU)</code></pre>
-<pre><code>## 
-##  Shapiro-Wilk normality test
-## 
-## data:  nonuse_clean$PANU
-## W = 0.81891, p-value = 7.361e-15</code></pre>
-<pre class="r"><code>shapiro.test(nonuse_clean$EENU)</code></pre>
-<pre><code>## 
-##  Shapiro-Wilk normality test
-## 
-## data:  nonuse_clean$EENU
-## W = 0.96042, p-value = 1.436e-05</code></pre>
-<pre class="r"><code>shapiro.test(nonuse_clean$SANU)</code></pre>
-<pre><code>## 
-##  Shapiro-Wilk normality test
-## 
-## data:  nonuse_clean$SANU
-## W = 0.96425, p-value = 3.933e-05</code></pre>
-<pre class="r"><code># --- 3. Matrice de corrélation ---
-# (choisis &quot;pearson&quot; si normalité, sinon &quot;spearman&quot;)
-cor_matrix &lt;- cor(nonuse_clean, method = &quot;spearman&quot;)
-print(cor_matrix)</code></pre>
-<pre><code>##           PANU      EENU      SANU
-## PANU 1.0000000 0.3867028 0.2160221
-## EENU 0.3867028 1.0000000 0.2876098
-## SANU 0.2160221 0.2876098 1.0000000</code></pre>
-<pre class="r"><code># --- 4. Tests de corrélation individuels ---
-cor.test(nonuse_clean$PANU, nonuse_clean$SANU, method = &quot;spearman&quot;)</code></pre>
-<pre><code>## 
-##  Spearman&#39;s rank correlation rho
-## 
-## data:  nonuse_clean$PANU and nonuse_clean$SANU
-## S = 1192838, p-value = 0.001718
-## alternative hypothesis: true rho is not equal to 0
-## sample estimates:
-##       rho 
-## 0.2160221</code></pre>
-<pre class="r"><code>cor.test(nonuse_clean$PANU, nonuse_clean$EENU, method = &quot;spearman&quot;)</code></pre>
-<pre><code>## 
-##  Spearman&#39;s rank correlation rho
-## 
-## data:  nonuse_clean$PANU and nonuse_clean$EENU
-## S = 933144, p-value = 9.725e-09
-## alternative hypothesis: true rho is not equal to 0
-## sample estimates:
-##       rho 
-## 0.3867028</code></pre>
-<pre class="r"><code>cor.test(nonuse_clean$SANU, nonuse_clean$EENU, method = &quot;spearman&quot;)</code></pre>
-<pre><code>## 
-##  Spearman&#39;s rank correlation rho
-## 
-## data:  nonuse_clean$SANU and nonuse_clean$EENU
-## S = 1083916, p-value = 2.615e-05
-## alternative hypothesis: true rho is not equal to 0
-## sample estimates:
-##       rho 
-## 0.2876098</code></pre>
 <p>Visualize the PANU-SANU relationship (and the PANU-EENU
 relationship)</p>
 <pre class="r"><code>library(ggplot2)
@@ -1991,13 +1918,19 @@ in your notebook, with a short sentence for each question.</p>
 <pre><code>    - What is a median? A mean?</code></pre>
 <p>Median: the middle value of a dataset when the values are ordered.
 Mean: the sum of all values divided by the number of values.</p>
+<p>Dodge, 1993.Dodge Y.: Statistique. Dictionnaire encyclopédique.
+In(eds): . Paris: Dunod, 1993.</p>
 <pre><code>    - What is a variance? A standard deviation?</code></pre>
 <p>Variance: the average of the squared differences from the mean.
 Standard deviation (SD): the square root of the variance, expressing
 variability in the same units as the data.</p>
+<p>Dodge, 1993.Dodge Y.: Statistique. Dictionnaire encyclopédique.
+In(eds): . Paris: Dunod, 1993.</p>
 <pre><code>    - What is a normal distribution?</code></pre>
 <p>(Gaussian distribution) is a symmetric, bell-shaped probability
 distribution defined by its mean (µ) and standard deviation (σ).</p>
+<p>Dodge, 1993.Dodge Y.: Statistique. Dictionnaire encyclopédique.
+In(eds): . Paris: Dunod, 1993.</p>
 <pre><code>    - What is a statistical test?</code></pre>
 <p>A statistical test is a formal procedure that uses data to evaluate a
 hypothesis, typically by comparing an observed statistic to a
@@ -2030,7 +1963,12 @@ negative).</p>
 the same subjects). Unpaired test: used when observations are
 independent (e.g., two different groups).</p>
 <p>Sources : Livres : Réussite à la LCA en français anglais Maitriser la
-LCA en anglais</p>
+LCA en anglais Dodge, 1993.Dodge Y.: Statistique. Dictionnaire
+encyclopédique. In(eds): . Paris: Dunod, 1993. Jenicek et Cleroux,
+1982.Jenicek M., and Cleroux R.: Épidémiologie. In(eds): Principes,
+techniques, applications. Paris: Maloine, 1982. Jammal et coll.,
+1988.Jammal A., Allard R., and Loslier G.: Dictionnaire d’épidémiologie.
+In(eds): . St-Hyacinthe: Edisem, 1988.</p>
 <p>You can use your favorite LLM, book or web site to answer these
 questions, but you have to provide at least one reference for each
 answer (book, article, URL, LLM prompt, etc.).</p>
