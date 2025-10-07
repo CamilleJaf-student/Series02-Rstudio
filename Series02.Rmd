@@ -139,10 +139,8 @@ Summarize your results as you would do in your master’s thesis report, or as i
 What are the limits of your analysis?
 
 
-
 # Statistical tests: comparison of medians (or means?)
 In this series of exercises, you will explore how to compare two groups of data, using non-parametric tests (or parametric tests… if it makes sense to do so).
-
 
 
 ## Make clear what is a statistical test, and when to use it.
@@ -153,14 +151,20 @@ Below are some questions to guide your analysis. You can answer them in your not
 Median: the middle value of a dataset when the values are ordered.
 Mean: the sum of all values divided by the number of values.
 
+Dodge, 1993.Dodge Y.: Statistique. Dictionnaire encyclopédique. In(eds): . Paris: Dunod, 1993.
+
         - What is a variance? A standard deviation?
 
 Variance: the average of the squared differences from the mean.
 Standard deviation (SD): the square root of the variance, expressing variability in the same units as the data.
 
+Dodge, 1993.Dodge Y.: Statistique. Dictionnaire encyclopédique. In(eds): . Paris: Dunod, 1993.
+
         - What is a normal distribution?
 
 (Gaussian distribution) is a symmetric, bell-shaped probability distribution defined by its mean (µ) and standard deviation (σ).
+
+Dodge, 1993.Dodge Y.: Statistique. Dictionnaire encyclopédique. In(eds): . Paris: Dunod, 1993.
 
         - What is a statistical test?
 
@@ -205,6 +209,9 @@ Sources :
 Livres :
 Réussite à la LCA en français anglais
 Maitriser la LCA en anglais
+Dodge, 1993.Dodge Y.: Statistique. Dictionnaire encyclopédique. In(eds): . Paris: Dunod, 1993.
+Jenicek et Cleroux, 1982.Jenicek M., and Cleroux R.: Épidémiologie. In(eds): Principes, techniques, applications. Paris: Maloine, 1982.
+Jammal et coll., 1988.Jammal A., Allard R., and Loslier G.: Dictionnaire d'épidémiologie. In(eds): . St-Hyacinthe: Edisem, 1988.
 
 You can use your favorite LLM, book or web site to answer these questions, but you have to provide at least one reference for each answer (book, article, URL, LLM prompt, etc.).
 
