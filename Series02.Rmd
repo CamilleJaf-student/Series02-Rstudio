@@ -285,10 +285,10 @@ Here, we will test stereotypes about snorers… among others.
 ### The data
 Download the file snore.txt
 
-```{r load-Resultdata}
-snore <- read.csv("data/snore.csv", sep=",", header=TRUE)
-head(snore)
-summary(snore)
+```{r load-Snore}
+snore_df <- read.csv("data/snore.csv", sep = ";", dec = ",", header = TRUE)
+head(snore_df)
+summary(snore_df)
 ```
 
 This file contains anthropometric and qualitative measurements (1 person per line).
@@ -297,15 +297,162 @@ This file contains anthropometric and qualitative measurements (1 person per lin
 Do the data confirm the following stereotypes? Provide a reasoned answer (data, figure, result sentence) for each question.
 Are snorers fatter?
 
+# Make a histogram of weight for snorers and non-snorers (O=yes, N=no)
+```{r histogram_snorers}
+names(snore_df)
 
+snore_df$snore <- factor(snore_df$snore, levels = c("N","O"),
+                         labels = c("Non-ronfleur","Ronfleur"))
+
+# Plot
+library(ggplot2)
+ggplot(snore_df, aes(x = weight, fill = snore)) +
+  geom_histogram(position = "identity", bins = 20, alpha = 0.5, na.rm = TRUE) +
+  labs(title = "Répartition du poids selon le statut de ronflement",
+       x = "Poids (kg)", y = "Effectif", fill = "Statut") +
+  theme_minimal()
+```
+
+```{r histogram_snorersBMI}
+names(snore_df)
+
+
+# Plot
+library(ggplot2)
+ggplot(snore_df, aes(x = IMC, fill = snore)) +
+  geom_histogram(position = "identity", bins = 20, alpha = 0.5, na.rm = TRUE) +
+  labs(title = "Répartition du poids selon le statut de ronflement",
+       x = "IMC (kg/m^2)", y = "Effectif", fill = "Statut") +
+  theme_minimal()
+```
+
+# Since both groups do not follow a normal distribution, we will use a non-parametric test (Wilcoxon test)
+```{r wilcoxon_snorers}
+# Test de Wilcoxon
+wilcox_test <- wilcox.test(IMC ~ snore, data = snore_df, na.rm = TRUE)
+wilcox_test
+```
 Do snorers drink or smoke more?
+# Bar plot for smoking status between snorers and non-snorers
+```{r barplot_smoking_snorers}
+library(ggplot2)
+# Ensure 'smoke' is a factor
+snore_df$smoke <- factor(snore_df$tabac, levels = c("N","O"),
+                         labels = c("Non-fumeur","Fumeur"))
+# Plot
+ggplot(snore_df, aes(x = snore, fill = smoke)) +
+  geom_bar(position = "dodge", na.rm = TRUE) +
+  labs(title = "Statut de tabagisme selon le statut de ronflement",
+       x = "Statut de ronflement", y = "Effectif", fill = "Statut de tabagisme") +
+  theme_minimal()
+```
+```{r chi2_smoking_snorers}
+# Test du Chi²
+chi2_test <- chisq.test(table(snore_df$snore, snore_df$smoke))
+chi2_test
+```
+# Histogram alcohol consumption(glass/week) between snorers and non-snorers
+```{r histogram_alcohol_snorers}
+library(ggplot2)
+# Plot
+ggplot(snore_df, aes(x = alcool, fill = snore)) +
+  geom_histogram(position = "identity", bins = 20, alpha = 0.5, na.rm = TRUE) +
+  labs(title = "Consommation d'alcool selon le statut de ronflement",
+       x = "Consommation d'alcool (verres/semaine)", y = "Effectif", fill = "Statut") +
+  theme_minimal()
+```
+```{r wilcoxon_alcohol_snorers}
+# Test de Wilcoxon
+wilcox_test_alcohol <- wilcox.test(alcool ~ snore, data = snore_df, na.rm = TRUE)
+wilcox_test_alcohol
+```
 Are men fatter?
+# Compare IMC between men and women
+```{r histogramIMC_gender}
+snore_df$gender <- factor(snore_df$sex, levels = c("F","H"),
+                         labels = c("Femme","Homme"))
+# Plot
+library(ggplot2)
+ggplot(snore_df, aes(x = IMC, fill = gender)) +
+  geom_histogram(position = "identity", bins = 20, alpha = 0.5, na.rm = TRUE) +
+  labs(title = "Répartition de l'IMC selon le sexe",
+       x = "IMC (kg/m^2)", y = "Effectif", fill = "Sexe") +
+  theme_minimal()
+```
+```{r shapiroIMC_gender}
+# Vérifier les niveaux
+levels(snore_df$gender)
+# Tests de normalité (en retirant les NA)
+shapiro_femme <- shapiro.test( snore_df$IMC[snore_df$gender == "Femme"] )
+shapiro_homme <- shapiro.test( snore_df$IMC[snore_df$gender == "Homme"] )
+# Afficher les résultats dans le knit
+shapiro_femme
+shapiro_homme
+```
+# Since both groups do not follow a normal distribution, we will use a non-parametric test
+```{r wilcoxonIMC_gender}
+# Test de Wilcoxon
+wilcox_test_IMC <- wilcox.test(IMC ~ gender, data = snore_df, na.rm = TRUE)
+wilcox_test_IMC
+```
 Do women smoke less?
+# Bar plot for smoking status between men and women
+```{r barplot_smoking_gender}
+library(ggplot2)
+# Ensure 'smoke' is a factor
+snore_df$smoke <- factor(snore_df$tabac, levels = c("N","O"),
+                         labels = c("Non-fumeur","Fumeur"))
+# Plot
+ggplot(snore_df, aes(x = gender, fill = smoke)) +
+  geom_bar(position = "dodge", na.rm = TRUE) +
+  labs(title = "Statut de tabagisme selon le sexe",
+       x = "Sexe", y = "Effectif", fill = "Statut de tabagisme") +
+  theme_minimal()
+```
+```{r chi2_smoking_gender}
+# Test du Chi
+chi2_test_gender <- chisq.test(table(snore_df$gender, snore_df$smoke))
+chi2_test_gender
+```
+
 From a more general perspective:
 Are there any correlations between variables?
+```{r correlation_matrix_snore}
+# Select numeric columns for correlation
+numeric_cols <- snore_df[sapply(snore_df, is.numeric)]
+# Compute correlation matrix
+cor_matrix <- cor(numeric_cols, use = "pairwise.complete.obs")
+# Load library for visualization
+library(ggcorrplot)
+# Plot correlation matrix
+ggcorrplot(cor_matrix,
+           method = "circle",
+           type = "lower",
+           lab = TRUE,
+           title = "Matrice de corrélation des variables numériques")
+# Write the result of the correlation analysis
+cor_matrix
+```
+Are there any correlations between variables, including non numeric column (sex "H/F", tabac "O/N", snore "O/N") ?
+```{r correlation_mixed_snore}
+# Load library for mixed correlation
+library(GGally)
+# Plot mixed correlation matrix
+ggpairs(snore_df,
+        columns = c("age", "weight", "IMC", "height", "sex", "tabac", "snore"),
+        title = "Matrice de corrélation mixte")
+# Write the result of the correlation analysis
+# Note: ggpairs does not provide a correlation matrix output, but visualizes relationships.
+
+```
+
+
 3 Epilogue: beyond the scope of this series
+
 Finally, some of you may want to go beyond the scope of this series with new questions, such as:
 
-Can you predict the value of one variable from the others? (linear regression, logistic regression, etc.)
-Can you classify individuals based on their variables? (clustering, PCA, etc.)
+- Can you predict the value of one variable from the others? (linear regression, logistic regression, etc.)
+
+- Can you classify individuals based on their variables? (clustering, PCA, etc.)
+
 NOTE: These questions are more advanced, and I don’t want you to address them from a technical standpoint or provide code. But they give you an idea of what you can do with data mining techniques… provided you know why you want to do it. I invite you to think about the perspective these questions open up and, if you feel ready to do so, to write a short paragraph about it.
