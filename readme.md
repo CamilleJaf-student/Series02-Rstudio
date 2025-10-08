@@ -1,8 +1,7 @@
 # Statistical Analysis Project – IEAP 2025
 
 ## Description
-This project is part of the "Introduction to Statistics with R" series in the Master IEAP 2025 program.  
-It aims to apply basic and intermediate statistical methods to real-world datasets in R.  
+This project is part of the "Introduction to Statistics with Rstudio" series in the Master IEAP 2025 program.  
 Through this work, we explore how to describe, visualize, and test relationships between variables.
 
 ## Objectives
@@ -10,8 +9,8 @@ Through this work, we explore how to describe, visualize, and test relationships
   - Mean, median, variance, standard deviation, interquartile range
   - Confidence intervals and data dispersion
 - Apply and interpret statistical tests:
-  - Parametric tests (Student t-test, ANOVA)
-  - Non-parametric tests (Wilcoxon, Mann–Whitney)
+  - Parametric tests (Student t-test)
+  - Non-parametric tests (Wilcoxon)
 - Test assumptions of normality (Shapiro–Wilk) and variance homogeneity
 - Study linear relationships using correlation (Pearson, Spearman)
 - Represent results with graphical methods (histograms, boxplots, correlation plots)
