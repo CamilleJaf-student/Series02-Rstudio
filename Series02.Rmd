@@ -1,0 +1,458 @@
+---
+title: "Series02-Rstudio : \n"
+author: "Camille JAFFEUX"
+date: "`r format(Sys.time(), '%d %B, %Y, %H:%M')`"
+output:
+  html_document:
+    df_print: paged
+    code_folding: hide
+    toc: false
+    number_sections: true
+---
+
+# Correlations and linear regression
+In this series of exercises, you will explore correlations and linear regression, using a dataset from a real experiment.
+
+## The problem
+You want to know if there is a relationship between the nonuse of the proximal part of the upper limb (PANU) and the nonuse of the shoulder (SANU) or the elbow (EENU).
+
+## The data
+As you will see, the data is far from perfect, but this is the reality of experimental data, especially in the case of clinical data.
+
+Download the file NonUse.csv from the course Moodle.
+
+```{r load-data}
+nonuse <- read.csv("data/NonUse.csv", sep=",", header=TRUE)
+head(nonuse)
+summary(nonuse)
+```
+This file contains measures of upper extremity nonuse:
+
+        -PANU: Proximal Arm Non Use
+        -SANU: Shoulder Antepulsion Non Use
+        -EENU: Elbow Extension Non Use
+  
+In your notebook, make a clear description of the experiment, the variables and the data. Do not forget to give the units of each variable, and the range of possible values.
+
+Patient was seat and try to catch 
+
+name | description | unit | range |
+-----|-------------|------|------|
+PANU | Proximal Arm Non Use | % |  0 to 100% |
+SANU | Shoulder Antepulsion Non Use | % |  0 to 100% |
+EENU | Elbow Extension Non Use | % |  0 to 100% |
+
+
+## Corelation analysis
+Below are some questions to guide your analysis.
+
+Is PANU correlated with SANU and/or EENU?
+
+```` {r histogram_PANU}
+hist(nonuse$PANU, 
+     main = "PANU Distribution", 
+     xlab = "PANU", 
+     col = "lightgreen", 
+     border = "black", 
+     breaks = 20,       # number of bins
+     probability = TRUE) # scales y-axis as density
+
+# Add density curve
+lines(density(nonuse$PANU, na.rm = TRUE), 
+      col = "red", lwd = 2)
+````
+````{r correlation_sanu_spearman}
+cor.test(nonuse$PANU, nonuse$SANU, method = "spearman")
+````
+
+
+Visualize the PANU-SANU relationship (and the PANU-EENU relationship)
+
+``` {r plot_sanu}
+library(ggplot2)
+ggplot(nonuse, aes(x=PANU, y=SANU)) +
+  geom_point() +
+  xlim(-100, 100) +
+  ylim(-100, 100)
+  labs(title="PANU vs SANU", x="PANU", y="SANU") +
+  theme_minimal()
+```
+
+Perform a linear regression for PANU-SANU (and for PANU-EENU)
+
+``` {r plot_sanu-regression}
+library(ggplot2)
+ggplot(nonuse, aes(x=PANU, y=SANU)) +
+  geom_point() +
+  geom_smooth(method='lm', formula= y~x, color='salmon', se=T) +
+  xlim(-100, 100) +
+  ylim(-100, 100)
+  labs(title="PANU vs SANU", x="PANU", y="SANU") +
+  theme_minimal()
+```
+
+Give the regression equations: PANU = a * SANU + b and PANU = a * EENU + b
+
+``` {r lm-sanu}
+lm_sanu <- lm(SANU ~ PANU, data=nonuse)
+summary(lm_sanu)
+coef(lm_sanu)
+slope <- coef(lm_sanu)[1]
+intercept <- coef(lm_sanu)[2]
+cat("Regression equation : SANU =", slope, "*PANU +", intercept, "\n")
+```
+``` {r lm-eenu}
+lm_eenu <- lm(EENU ~ PANU, data=nonuse)
+summary(lm_eenu)
+coef(lm_eenu)
+slope <- coef(lm_eenu)[1]
+intercept <- coef(lm_eenu)[2]
+cat("Regression equation : EENU =", slope, "*PANU +", intercept, "\n")
+```
+
+``` {r lm-panu_to_sanu}
+lm_panu <- lm(PANU ~ SANU, data=nonuse)
+summary(lm_panu)
+coef(lm_panu)
+slope <- coef(lm_panu)[1]
+intercept <- coef(lm_panu)[2]
+cat("Regression equation : PANU =", slope, "*SANU +", intercept, "\n")
+```
+``` {r lm-panu_to_eenu}
+lm_panu <- lm(PANU ~ EENU, data=nonuse)
+summary(lm_panu)
+coef(lm_panu)
+slope <- coef(lm_panu)[1]
+intercept <- coef(lm_panu)[2]
+cat("Regression equation : PANU =", slope, "*EENU +", intercept, "\n")
+```
+
+Summarize your results as you would do in your master’s thesis report, or as in a scientific article (e.g., What sentence will you write in the article explaining your result?).
+
+A correlation and linear regression analysis were conducted to determine whether the proximal nonuse of the upper limb (PANU) was related to the nonuse of the shoulder (SANU) and the elbow (EENU).
+
+The Spearman’s rank correlation revealed a weak but significant positive association between PANU and SANU (ρ = 0.22, p = 0.0017), suggesting that greater proximal nonuse tends to be accompanied by higher shoulder nonuse.
+
+In contrast, a strong and significant positive linear relationship was observed between PANU and elbow extension nonuse (EENU) (R² = 0.225, p < 0.001), indicating that greater proximal disuse is associated with greater distal disuse at the elbow level. Conversely, the linear association between PANU and SANU was not significant (R² = 0.009, p = 0.17), although the weak monotonic correlation (ρ = 0.22) suggests a minor trend toward co-occurrence of proximal and shoulder nonuse.
+
+Overall, these findings indicate that proximal nonuse (PANU) is more strongly related to distal (elbow) nonuse than to shoulder nonuse, supporting the hypothesis that compensatory mechanisms may follow a proximal-to-distal gradient in motor disuse patterns.
+
+What are the limits of your analysis?
+
+1) Missing data:
+A large number of missing observations were present (223 for SANU and EENU), reducing the statistical power and the representativeness of the sample.
+
+2) Linearity assumption:
+The linear model assumes a straight-line relationship between variables, which may not capture the complexity of upper limb motor behavior or compensatory strategies.
+
+3) Causality:
+The analysis is correlational; it does not allow inferring causality between proximal and distal nonuse.
+
+
+# Statistical tests: comparison of medians (or means?)
+In this series of exercises, you will explore how to compare two groups of data, using non-parametric tests (or parametric tests… if it makes sense to do so).
+
+
+## Make clear what is a statistical test, and when to use it.
+Below are some questions to guide your analysis. You can answer them in your notebook, with a short sentence for each question.
+
+        - What is a median? A mean?
+
+Median: the middle value of a dataset when the values are ordered.
+Mean: the sum of all values divided by the number of values.
+
+Dodge, 1993.Dodge Y.: Statistique. Dictionnaire encyclopédique. In(eds): . Paris: Dunod, 1993.
+
+        - What is a variance? A standard deviation?
+
+Variance: the average of the squared differences from the mean.
+Standard deviation (SD): the square root of the variance, expressing variability in the same units as the data.
+
+Dodge, 1993.Dodge Y.: Statistique. Dictionnaire encyclopédique. In(eds): . Paris: Dunod, 1993.
+
+        - What is a normal distribution?
+
+(Gaussian distribution) is a symmetric, bell-shaped probability distribution defined by its mean (µ) and standard deviation (σ).
+
+Dodge, 1993.Dodge Y.: Statistique. Dictionnaire encyclopédique. In(eds): . Paris: Dunod, 1993.
+
+        - What is a statistical test?
+
+A statistical test is a formal procedure that uses data to evaluate a hypothesis, typically by comparing an observed statistic to a theoretical distribution under the null hypothesis.
+
+        - When to use a statistical test?
+        
+When you want to make inferences from a sample to a population, compare groups, or test relationships, instead of just describing the data.
+
+        - What is a parametric test? A non-parametric test?
+
+Parametric tests assume that data follow a certain distribution (usually normal) and use parameters like mean and variance (e.g., t-test, ANOVA).
+Non-parametric tests make fewer assumptions; they use ranks or medians (e.g., Wilcoxon, Kruskal-Wallis).
+
+        - What are the assumptions of parametric tests?
+
+Normal distribution of data (or residuals).
+Homogeneity of variances between groups.
+Independence of observations.
+
+        - What are the assumptions of non-parametric tests?
+
+Independence of observations.
+Ordinal or continuous data (not nominal).
+Monotonic relationship for correlation-type tests.
+
+        - What is a p-value?
+
+The p-value is the probability of obtaining results at least as extreme as those observed, assuming the null hypothesis is true.
+
+        - What is the risk of error when using a statistical test?
+
+Type I error (α): rejecting H0 when it is true (false positive).
+Type II error (β): failing to reject H0 when it is false (false negative).
+
+        - What is the difference between a paired and an unpaired test?
+
+Paired test: used when observations are linked (e.g., before–after on the same subjects).
+Unpaired test: used when observations are independent (e.g., two different groups).
+
+Sources : 
+Livres :
+Réussite à la LCA en français anglais
+Maitriser la LCA en anglais
+Dodge, 1993.Dodge Y.: Statistique. Dictionnaire encyclopédique. In(eds): . Paris: Dunod, 1993.
+Jenicek et Cleroux, 1982.Jenicek M., and Cleroux R.: Épidémiologie. In(eds): Principes, techniques, applications. Paris: Maloine, 1982.
+Jammal et coll., 1988.Jammal A., Allard R., and Loslier G.: Dictionnaire d'épidémiologie. In(eds): . St-Hyacinthe: Edisem, 1988.
+
+You can use your favorite LLM, book or web site to answer these questions, but you have to provide at least one reference for each answer (book, article, URL, LLM prompt, etc.).
+
+## Effect of treatment over time
+This is a very classical question in clinical or sport research: does a treatment-training have an effect over time?
+
+To answer this question scientifically, measurements must be taken before and after treatment, and possibly later, in order to assess whether the effect is lasting or not.
+
+### The data
+Download the file PrePost.csv
+
+This file contains before/after measurements. 
+The treatment is a rehabilitation training for individuals with cardiac conditions.
+
+Before going further, you have to make clear what are the measured variables. 
+What do they measure? The capacity to catch a 
+What are the units? 
+What are the possible values? 
+What are the expected changes over rehabilitation.
+
+```{r load-Prepostdata}
+prepost <- read.csv("data/Prepost.csv", sep=",", header=TRUE)
+head(prepost)
+summary(prepost)
+```
+
+Make a table, with one row per variable, and the following columns:
+
+| Variable | Description | Unit | Possible values | Expected change |
+| -------- | ----------- | ---- | --------------- | --------------- |
+| Performance | Performance score or index to measure the subject capacity | u.a | Continuous positive values |Increase expected after rehabilitation |
+| Time | Before vs After rehabilitation | "Before" or "After" | T01 or T02 | --- |
+
+
+### The analysis
+You want to know if the treatment has an effect on one or more of the measured variables.
+
+- Does the treatment have an effect?
+H0 (null hypothesis): There is no difference between Before and After performance.
+H1 (alternative hypothesis): The After performance is higher than Before.
+
+- What comparison are you going to make?
+We need to compare the same patient Before and after rehab. 
+
+- Which test will you use? Parametric or non-parametric?
+We can use a parametric test if we have a normal distribution.
+For check this we can use a Shapiro test to validate the normal distribution of our population.
+If we have non normal distribution we need to use a non parametric test.
+
+- Which graph illustrates the effect of the treatment?
+We can use a paired line plot.
+
+What sentence will you write in your thesis to explain your result?
+A Wilcoxon signed-rank test showed that performance significantly increased after rehabilitation (V = XX, p < 0.05), suggesting that the treatment produced a positive effect on physical performance.
+
+2.3 Testing some stereotypes
+Humans have stereotypes, some of them are probably true, some others are probably false (e.g., ref ).
+
+Here, we will test stereotypes about snorers… among others.
+
+### The data
+Download the file snore.txt
+
+```{r load-Snore}
+snore_df <- read.csv("data/snore.csv", sep = ";", dec = ",", header = TRUE)
+head(snore_df)
+summary(snore_df)
+```
+
+This file contains anthropometric and qualitative measurements (1 person per line).
+
+### The analysis
+Do the data confirm the following stereotypes? Provide a reasoned answer (data, figure, result sentence) for each question.
+Are snorers fatter?
+
+# Make a histogram of weight for snorers and non-snorers (O=yes, N=no)
+```{r histogram_snorers}
+names(snore_df)
+
+snore_df$snore <- factor(snore_df$snore, levels = c("N","O"),
+                         labels = c("Non-ronfleur","Ronfleur"))
+
+# Plot
+library(ggplot2)
+ggplot(snore_df, aes(x = weight, fill = snore)) +
+  geom_histogram(position = "identity", bins = 20, alpha = 0.5, na.rm = TRUE) +
+  labs(title = "Répartition du poids selon le statut de ronflement",
+       x = "Poids (kg)", y = "Effectif", fill = "Statut") +
+  theme_minimal()
+```
+
+```{r histogram_snorersBMI}
+names(snore_df)
+
+
+# Plot
+library(ggplot2)
+ggplot(snore_df, aes(x = IMC, fill = snore)) +
+  geom_histogram(position = "identity", bins = 20, alpha = 0.5, na.rm = TRUE) +
+  labs(title = "Répartition du poids selon le statut de ronflement",
+       x = "IMC (kg/m^2)", y = "Effectif", fill = "Statut") +
+  theme_minimal()
+```
+
+# Since both groups do not follow a normal distribution, we will use a non-parametric test (Wilcoxon test)
+```{r wilcoxon_snorers}
+# Test de Wilcoxon
+wilcox_test <- wilcox.test(IMC ~ snore, data = snore_df, na.rm = TRUE)
+wilcox_test
+```
+Do snorers drink or smoke more?
+# Bar plot for smoking status between snorers and non-snorers
+```{r barplot_smoking_snorers}
+library(ggplot2)
+# Ensure 'smoke' is a factor
+snore_df$smoke <- factor(snore_df$tabac, levels = c("N","O"),
+                         labels = c("Non-fumeur","Fumeur"))
+# Plot
+ggplot(snore_df, aes(x = snore, fill = smoke)) +
+  geom_bar(position = "dodge", na.rm = TRUE) +
+  labs(title = "Statut de tabagisme selon le statut de ronflement",
+       x = "Statut de ronflement", y = "Effectif", fill = "Statut de tabagisme") +
+  theme_minimal()
+```
+```{r chi2_smoking_snorers}
+# Test du Chi²
+chi2_test <- chisq.test(table(snore_df$snore, snore_df$smoke))
+chi2_test
+```
+# Histogram alcohol consumption(glass/week) between snorers and non-snorers
+```{r histogram_alcohol_snorers}
+library(ggplot2)
+# Plot
+ggplot(snore_df, aes(x = alcool, fill = snore)) +
+  geom_histogram(position = "identity", bins = 20, alpha = 0.5, na.rm = TRUE) +
+  labs(title = "Consommation d'alcool selon le statut de ronflement",
+       x = "Consommation d'alcool (verres/semaine)", y = "Effectif", fill = "Statut") +
+  theme_minimal()
+```
+```{r wilcoxon_alcohol_snorers}
+# Test de Wilcoxon
+wilcox_test_alcohol <- wilcox.test(alcool ~ snore, data = snore_df, na.rm = TRUE)
+wilcox_test_alcohol
+```
+Are men fatter?
+# Compare IMC between men and women
+```{r histogramIMC_gender}
+snore_df$gender <- factor(snore_df$sex, levels = c("F","H"),
+                         labels = c("Femme","Homme"))
+# Plot
+library(ggplot2)
+ggplot(snore_df, aes(x = IMC, fill = gender)) +
+  geom_histogram(position = "identity", bins = 20, alpha = 0.5, na.rm = TRUE) +
+  labs(title = "Répartition de l'IMC selon le sexe",
+       x = "IMC (kg/m^2)", y = "Effectif", fill = "Sexe") +
+  theme_minimal()
+```
+```{r shapiroIMC_gender}
+# Vérifier les niveaux
+levels(snore_df$gender)
+# Tests de normalité (en retirant les NA)
+shapiro_femme <- shapiro.test( snore_df$IMC[snore_df$gender == "Femme"] )
+shapiro_homme <- shapiro.test( snore_df$IMC[snore_df$gender == "Homme"] )
+# Afficher les résultats dans le knit
+shapiro_femme
+shapiro_homme
+```
+# Since both groups do not follow a normal distribution, we will use a non-parametric test
+```{r wilcoxonIMC_gender}
+# Test de Wilcoxon
+wilcox_test_IMC <- wilcox.test(IMC ~ gender, data = snore_df, na.rm = TRUE)
+wilcox_test_IMC
+```
+Do women smoke less?
+# Bar plot for smoking status between men and women
+```{r barplot_smoking_gender}
+library(ggplot2)
+# Ensure 'smoke' is a factor
+snore_df$smoke <- factor(snore_df$tabac, levels = c("N","O"),
+                         labels = c("Non-fumeur","Fumeur"))
+# Plot
+ggplot(snore_df, aes(x = gender, fill = smoke)) +
+  geom_bar(position = "dodge", na.rm = TRUE) +
+  labs(title = "Statut de tabagisme selon le sexe",
+       x = "Sexe", y = "Effectif", fill = "Statut de tabagisme") +
+  theme_minimal()
+```
+```{r chi2_smoking_gender}
+# Test du Chi
+chi2_test_gender <- chisq.test(table(snore_df$gender, snore_df$smoke))
+chi2_test_gender
+```
+
+From a more general perspective:
+Are there any correlations between variables?
+```{r correlation_matrix_snore}
+# Select numeric columns for correlation
+numeric_cols <- snore_df[sapply(snore_df, is.numeric)]
+# Compute correlation matrix
+cor_matrix <- cor(numeric_cols, use = "pairwise.complete.obs")
+# Load library for visualization
+library(ggcorrplot)
+# Plot correlation matrix
+ggcorrplot(cor_matrix,
+           method = "circle",
+           type = "lower",
+           lab = TRUE,
+           title = "Matrice de corrélation des variables numériques")
+# Write the result of the correlation analysis
+cor_matrix
+```
+Are there any correlations between variables, including non numeric column (sex "H/F", tabac "O/N", snore "O/N") ?
+```{r correlation_mixed_snore}
+# Load library for mixed correlation
+library(GGally)
+# Plot mixed correlation matrix
+ggpairs(snore_df,
+        columns = c("age", "weight", "IMC", "height", "sex", "tabac", "snore"),
+        title = "Matrice de corrélation mixte")
+# Write the result of the correlation analysis
+# Note: ggpairs does not provide a correlation matrix output, but visualizes relationships.
+
+```
+
+
+3 Epilogue: beyond the scope of this series
+
+Finally, some of you may want to go beyond the scope of this series with new questions, such as:
+
+- Can you predict the value of one variable from the others? (linear regression, logistic regression, etc.)
+
+- Can you classify individuals based on their variables? (clustering, PCA, etc.)
+
+NOTE: These questions are more advanced, and I don’t want you to address them from a technical standpoint or provide code. But they give you an idea of what you can do with data mining techniques… provided you know why you want to do it. I invite you to think about the perspective these questions open up and, if you feel ready to do so, to write a short paragraph about it.
